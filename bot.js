@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = 'y'
-const request = require('request');
-const ytdl = require('ytdl-core');
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 client.user.setGame(`Nothing`,"http://twitch.tv/S-F")
