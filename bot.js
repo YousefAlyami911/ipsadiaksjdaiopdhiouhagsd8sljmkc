@@ -9,6 +9,7 @@ client.on('message', message => {
         message.reply('pong');
       }
 });
+client.user.setGame(`Nothing`,"http://twitch.tv/S-F")
 
 
 
