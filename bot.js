@@ -1,10 +1,9 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = 'y';
-
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-client.user.setGame(`فقد الموسيقى تستحق الإحترام فأحترومني لأني اشغلكم اغاني انت وياه`,"http://twitch.tv/S-F")
+client.user.setGame(`فقط يقى تستحق الإحترام فأحترومني لأني اشغلكم اغاني انت وياه`,"http://twitch.tv/S-F")
   console.log('')
   console.log('')
   console.log('╔[═════════════════════════════════════════════════════════════════]╗')
