@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const queue = require('queue')
 const client = new Discord.Client();
 const prefix = 'y'
 
