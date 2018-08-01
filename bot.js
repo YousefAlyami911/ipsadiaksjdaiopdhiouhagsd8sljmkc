@@ -37,13 +37,7 @@ var voiceChannel = null;
 var skipReq = 0;
 var skippers = [];
 var now_playing = [];
-/*
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-*/
-client.on('ready', () => {});
+ });
 var download = function(uri, filename, callback) {
     request.head(uri, function(err, res, body) {
         console.log('content-type:', res.headers['content-type']);
@@ -290,8 +284,7 @@ For additional help,  `)
                         .addField('**Time Taken:**',msg + " ms ?? ")
                         .addField('**WebSocket:**',api + " ms ?? ")
          message.channel.send({embed:embed});
-                        }
-                    });
+  });
 
 
 client.login(process.env.BOT_TOKEN);
