@@ -1,213 +1,31 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const ytdl = require('ytdl-core');
-const request = require('request');
-const fs = require('fs');
-const getYoutubeID = require('get-youtube-id');
-const fetchVideoInfo = require('youtube-info');
+const prefix = '.'
 
-const yt_api_key = "AIzaSyDeoIH0u1e72AtfpwSKKOSy3IPp2UHzqi4";
-const prefix = 'y';
-client.login(discord_token);
-client.on('ready', function() {
-    console.log(`i am ready by TouchSky ${client.user.username}`);
-
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+client.user.setGame(`Nothing`,"http://twitch.tv/S-F")
+  console.log('')
+  console.log('')
+  console.log('╔[═════════════════════════════════════════════════════════════════]╗')
+  console.log(`[Start] ${new Date()}`);
+  console.log('╚[═════════════════════════════════════════════════════════════════]╝')
+  console.log('')
+  console.log('╔[════════════════════════════════════]╗');
+  console.log(`Logged in as * [ " ${client.user.username} " ]`);
+  console.log('')
+  console.log('Informations :')
+  console.log('')
+  console.log(`servers! [ " ${client.guilds.size} " ]`);
+  console.log(`Users! [ " ${client.users.size} " ]`);
+  console.log(`channels! [ " ${client.channels.size} " ]`);
+  console.log('╚[════════════════════════════════════]╝')
+  console.log('')
+  console.log('╔[════════════]╗')
+  console.log(' Bot Is Online')
+  console.log('╚[════════════]╝')
+  console.log('')
+  console.log('')
 });
-/*
-البكجات المطلوبة
-nvm install 10
-npm install --save discord.js
-npm install ytdl-core
-npm install get-youtube-id
-npm install youtube-info
-npm install simple-youtube-api
-npm install queue
-npm install ffmpeg-binaries 
-npm install node-opus
-npm install opusscript
-npm install fs
-npm install request
-/*
 
-/*
-////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
-////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
-////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
-////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
-*/
-var servers = [];
-var queue = [];
-var guilds = [];
-var queueNames = [];
-var isPlaying = false;
-var dispatcher = null;
-var voiceChannel = null;
-var skipReq = 0;
-var skippers = [];
-var now_playing = [];
-/*
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-\\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
-*/
-client.on('ready', () => {});
-var download = function(uri, filename, callback) {
-    request.head(uri, function(err, res, body) {
-        console.log('content-type:', res.headers['content-type']);
-        console.log('content-length:', res.headers['content-length']);
-
-        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-    });
-};
-
-client.on('message', function(message) {
-    const member = message.member;
-    const mess = message.content.toLowerCase();
-    const args = message.content.split(' ').slice(1).join(' ');
-
-    if (mess.startsWith(prefix + 'p')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        // if user is not insert the URL or song title
-        if (args.length == 0) {
-            let play_info = new Discord.RichEmbed()
-                .setAuthor(client.user.username, client.user.avatarURL)
-                .setFooter('طلب بواسطة: ' + message.author.tag)
-                .setDescription('**قم بإدراج رابط او اسم الأغنيه**')
-            message.channel.sendEmbed(play_info)
-            return;
-        }
-        if (queue.length > 0 || isPlaying) {
-            getID(args, function(id) {
-                add_to_queue(id);
-                fetchVideoInfo(id, function(err, videoInfo) {
-                    if (err) throw new Error(err);
-                    let play_info = new Discord.RichEmbed()
-                        .setAuthor(client.user.username, client.user.avatarURL)
-                        .addField('تمت إضافةالاغنيه بقائمة الإنتظار', `**
-                          ${videoInfo.title}
-                          **`)
-                        .setColor("#a637f9")
-                        .setFooter('|| ' + message.author.tag)
-                        .setThumbnail(videoInfo.thumbnailUrl)
-                    message.channel.sendEmbed(play_info);
-                    queueNames.push(videoInfo.title);
-                    now_playing.push(videoInfo.title);
-
-                });
-            });
-        }
-        else {
-
-            isPlaying = true;
-            getID(args, function(id) {
-                queue.push('placeholder');
-                playMusic(id, message);
-                fetchVideoInfo(id, function(err, videoInfo) {
-                    if (err) throw new Error(err);
-                    let play_info = new Discord.RichEmbed()
-                        .setAuthor(client.user.username, client.user.avatarURL)
-                        .addField('__**تم التشغيل ✅**__', `**${videoInfo.title}
-                              **`)
-                        .setColor("RANDOM")
-                        .addField(`بواسطه`, message.author.username)
-                        .setThumbnail(videoInfo.thumbnailUrl)
-
-                    // .setDescription('?')
-                    message.channel.sendEmbed(play_info)
-                    message.channel.send(`
-                            **${videoInfo.title}** تم تشغيل `)
-                    // client.user.setGame(videoInfo.title,'https://www.twitch.tv/Abdulmohsen');
-                });
-            });
-        }
-    }
-    else if (mess.startsWith(prefix + 's')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        message.channel.send('`✔`').then(() => {
-            skip_song(message);
-            var server = server = servers[message.guild.id];
-            if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
-        });
-    }
-    else if (message.content.startsWith(prefix + 'v')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        // console.log(args)
-        if (args > 100) return message.channel.send('1 - 100 || **__لا أكثر ولا أقل__**')
-        if (args < 1) return message.channel.send('1 - 100 || **__لا أكثر ولا أقل__**')
-        dispatcher.setVolume(1 * args / 50);
-        message.channel.sendMessage(`**__ ${dispatcher.volume*50}% مستوى الصوت __**`);
-    }
-    else if (mess.startsWith(prefix + 'pause')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        message.channel.send('`✔`').then(() => {
-            dispatcher.pause();
-        });
-    }
-    else if (mess.startsWith(prefix + 'ok')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-            message.channel.send('`✔`').then(() => {
-            dispatcher.resume();
-        });
-    }
-    else if (mess.startsWith(prefix + 'stop')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        message.channel.send('`✔`');
-        var server = server = servers[message.guild.id];
-        if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
-    }
-    else if (mess.startsWith(prefix + 'c')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        message.member.voiceChannel.join().then(message.channel.send(':ok:'));
-    }
-    else if (mess.startsWith(prefix + 'play')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        if (isPlaying == false) return message.channel.send(':anger: || **__تم التوقيف__**');
-        let playing_now_info = new Discord.RichEmbed()
-            .setAuthor(client.user.username, client.user.avatarURL)
-            .addField('تمت إضافةالاغنيه بقائمة الإنتظار', `**
-                  ${videoInfo.title}
-                  **`)
-            .setColor("RANDOM")
-            .setFooter('طلب بواسطة: ' + message.author.tag)
-            .setThumbnail(videoInfo.thumbnailUrl)
-        //.setDescription('?')
-        message.channel.sendEmbed(playing_now_info);
-    }
-});
 client.login(process.env.BOT_TOKEN);
-function skip_song(message) {
-    if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-    dispatcher.end();
-}
-
-function playMusic(id, message) {
-    voiceChannel = message.member.voiceChannel;
-
-
-    voiceChannel.join().then(function(connectoin) {
-        let stream = ytdl('https://www.youtube.com/watch?v=' + id, {
-            filter: 'audioonly'
-        });
-        skipReq = 0;
-        skippers = [];
-
-        dispatcher = connectoin.playStream(stream);
-        dispatcher.on('end', function() {
-            skipReq = 0;
-            skippers = [];
-            queue.shift();
-            queueNames.shift();
-            if (queue.length === 0) {
-                queue = [];
-                queueNames = [];
-                isPlaying = false;
-            }
-            else {
-                setTimeout(function() {
-                    playMusic(queue[0], message);
-                }, 500);
-            }
-        });
-    });
-}
