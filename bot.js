@@ -4,7 +4,6 @@ const client = new Discord.Client();
 client.on('ready', () => {
     console.log('I am ready!');
 });
-client.user.setGame(`Just Be Your Self :)`,"http://twitch.tv/S-F")
 client.on('message', message => {
     if (message.content === 'zg') {
         message.reply('pong');
