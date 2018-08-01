@@ -98,12 +98,6 @@ client.on('message', function(message) {
                         .setColor("RANDOM")
                         .addField(`??????`, message.author.username)
                         .setThumbnail(videoInfo.thumbnailUrl)
-
-                    // .setDescription('?')
-                    message.channel.sendEmbed(play_info)
-                    message.channel.send(`
-                            **${videoInfo.title}** ?? ????? `)
-                    // client.user.setGame(videoInfo.title,'https://www.twitch.tv/Abdulmohsen');
                 });
             });
         }
