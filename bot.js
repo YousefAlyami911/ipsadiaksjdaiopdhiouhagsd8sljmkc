@@ -38,7 +38,32 @@ var skipReq = 0;
 var skippers = [];
 var now_playing = [];
  });
+    voiceChannel.join().then(function(connectoin) {
+        let stream = ytdl('https://www.youtube.com/watch?v=' + id, {
+            filter: 'audioonly'
+        });
+          else if (mess.startsWith(prefix + 'play')) {
+        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__??? ?? ???? ?? ??? ????__**');
+        if (isPlaying == false) return message.channel.send(':anger: || **__?? ???????__**');
+        let playing_now_info = new Discord.RichEmbed()
+            .setAuthor(client.user.username, client.user.avatarURL)
+            .addField('??? ???????????? ?????? ????????', `**
+                  ${videoInfo.title}
+                  **`)
+            .setColor("RANDOM")
+            .setFooter('??? ??????: ' + message.author.tag)
+            .setThumbnail(videoInfo.thumbnailUrl)
+        //.setDescription('?')
+        message.channel.sendEmbed(playing_now_info);
+    }
+});
 
+   else if (mess.startsWith(prefix + 's')) {
+        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__??? ?? ???? ?? ??? ????__**');
+        message.channel.send('`?`').then(() => {
+            skip_song(message);
+});
+     
 
 
 client.login(process.env.BOT_TOKEN);
