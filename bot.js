@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const prefix = 'z';
+const prefix = 'y'
 const request = require('request');
 const ytdl = require('ytdl-core');
 client.on('ready', () => {
